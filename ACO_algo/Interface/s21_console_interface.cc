@@ -12,7 +12,7 @@ void ConsoleInterface::startProgram() {
 void ConsoleInterface::informationPart() {
   std::cout << style1 << "\n---------------------------------------------"
             << end << std::endl;
-  std::cout << style2 << "             WELCOME TO PARALLELS              "
+  std::cout << style2 << "             WELCOME TO PARALLELS            "
             << end << std::endl;
   std::cout << style1 << "---------------------------------------------" << end
             << std::endl;
@@ -31,7 +31,7 @@ void ConsoleInterface::fileReading() {
     std::cin >> filename;
     try {
       mainGraph.clearDataFile();
-      mainGraph.loadGraphFromFile("../datasets/" + filename);
+      mainGraph.loadGraphFromFile("datasets/" + filename);
       break;
     } catch (std::exception &exceptionText) {
       std::cerr << style4 << "\nError: " << exceptionText.what() << end

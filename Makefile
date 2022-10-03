@@ -26,6 +26,6 @@ check:
 	cppcheck --enable=all --suppress=missingInclude --suppress=unusedFunction --suppress=constParameter --language=c++ ACO_algo/*.* ACO_algo/*/*.* Winograd_algo/*.* Winograd_algo/*/*.* Matrix/*.*
 
 clang:
-	cp ../materials/linters/.clang-format . && \
+	cp misc/.clang-format . && \
 	clang-format -n ACO_algo/*.* ACO_algo/*/*.* Winograd_algo/*.* Winograd_algo/*/*.* Matrix/*.* SLE_algo/*/*.* SLE_algo/*.*
 	rm -f .clang-format

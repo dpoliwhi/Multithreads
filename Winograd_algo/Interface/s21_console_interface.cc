@@ -157,7 +157,6 @@ void ConsoleInterface::runClassicalParallelism(int n) {
   Simpletimer timer;
   int t = 3;
   int posibleThreads = std::thread::hardware_concurrency();
-  // std::cout << posibleThreads << std::endl;
   int maxThreads = std::min(n, posibleThreads);
   std::vector<std::thread> threads;
   for (int i = std::min(maxThreads, 2); i <= maxThreads; i += i > 2 ? 4 : 2) {
