@@ -1,11 +1,11 @@
 #pragma once
 
 #include <fstream>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <iostream>
 
-#include "../Matrix/s21_matrix_oop.h"
+#include "../../Matrix/s21_matrix_oop.h"
 
 namespace s21 {
 
@@ -27,10 +27,10 @@ class Graph {
   void checkTypeGraph();
 
  public:
-  Graph() {data._size = 0;}
+  Graph() { data._size = 0; }
   ~Graph() {}
-  void loadGraphFromFile(const std::string& fileName);
-  void exportGraphToDot(const std::string& fileName);
+  void loadGraphFromFile(const std::string &fileName);
+  void exportGraphToDot(const std::string &fileName);
   void clearDataFile();
 
   // getters

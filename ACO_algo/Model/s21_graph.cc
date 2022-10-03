@@ -2,7 +2,7 @@
 
 namespace s21 {
 
-void Graph::loadGraphFromFile(const std::string& fileName) {
+void Graph::loadGraphFromFile(const std::string &fileName) {
   std::ifstream file(fileName);
   std::string line;
   if (!file.is_open()) {
@@ -91,12 +91,13 @@ void Graph::checkTypeGraph() {
   for (int i = 0; i < data._size; i++) {
     for (int j = 0; j < data._size; j++) {
       if (data._matrix(i, j) > 1) data._weightType = weighted;
-      if (data._matrix(i, j) != data._matrix(j, i)) data._directionType = directed;
+      if (data._matrix(i, j) != data._matrix(j, i))
+        data._directionType = directed;
     }
   }
 }
 
-void Graph::exportGraphToDot(const std::string& fileName) {
+void Graph::exportGraphToDot(const std::string &fileName) {
   std::string fileWithPass = "Graphs/" + fileName;
   std::ofstream file(fileWithPass);
   Matrix temp(data._size, data._size);
@@ -114,9 +115,7 @@ void Graph::exportGraphToDot(const std::string& fileName) {
   for (int i = 0; i < data._size; i++) {
     for (int j = 0; j < data._size; j++) {
       if (temp(i, j) > 0) {
-        file << "\t" << i + 1 << " "
-             << type
-             << " " << j + 1;
+        file << "\t" << i + 1 << " " << type << " " << j + 1;
         file << " [label = "
              << "\"" << temp(i, j) << "\"];" << std::endl;
       }
@@ -138,7 +137,8 @@ void Graph::printData() {
   data._weightType ? std::cout << "weighted\n" : std::cout << "unweighted\n";
   std::cout << "size = " << data._size << std::endl;
   for (int i = 0; i < data._matrix.getRows(); i++) {
-    for (int j = 0; j < data._matrix.getCols(); j++) std::cout << data._matrix(i, j) << " ";
+    for (int j = 0; j < data._matrix.getCols(); j++)
+      std::cout << data._matrix(i, j) << " ";
     std::cout << std::endl;
   }
 }

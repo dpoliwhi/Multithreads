@@ -11,12 +11,51 @@ double randomChoose(int max) {
   return posRand(engine);
 }
 
-// Ant::Ant(Matrix data, Matrix phm, int startPos) : graphData(data), pheromones(phm), startPosition(startPos)
-// {
-//   sizeOfMap = data.getCols();
-//   position = startPos;
-//   result.distance = 0;
-// }
+Ant::Ant(Matrix data, Matrix phm, int startPos)
+    : graphData(data), pheromones(phm), startPosition(startPos) {
+  sizeOfMap = data.getCols();
+  position = startPos;
+  result.distance = 0;
+}
+
+void Ant::delateDataAnt() {
+  this->sizeOfMap = 0;
+  this->position = 0;
+  this->startPosition = 0;
+  this->tabu.clear();
+  this->probability.clear();
+  this->result.distance = 0;
+  this->result.vertices.clear();
+}
+
+Ant::Ant(const Ant &other) { *this = other; }
+
+Ant &Ant::operator=(const Ant &other) {
+  if (this != &other) {
+    this->sizeOfMap = other.sizeOfMap;
+    this->position = other.position;
+    this->graphData = other.graphData;
+    this->pheromones = other.pheromones;
+    this->startPosition = other.startPosition;
+    this->tabu = other.tabu;
+    this->probability = other.probability;
+    this->result = other.result;
+  }
+  return *this;
+}
+
+Ant::Ant(Ant &&other) {
+  *this = other;
+  other.delateDataAnt();
+}
+
+Ant &Ant::operator=(Ant &&other) {
+  if (this != &other) {
+    *this = other;
+    other.delateDataAnt();
+  }
+  return *this;
+}
 
 void Ant::initTabu() {
   for (int i = 0; i < sizeOfMap; ++i) {
@@ -39,7 +78,7 @@ std::vector<int> Ant::availableWays() {
 
 double Ant::getDistance(int from, int to) { return graphData(from, to); }
 
-void Ant::nestProbability(const std::vector<int>& aw) {
+void Ant::nestProbability(const std::vector<int> &aw) {
   double prevProb = 0;
   probability.clear();
   for (size_t i = 0; i < aw.size(); i++) {
@@ -48,7 +87,8 @@ void Ant::nestProbability(const std::vector<int>& aw) {
   }
 }
 
-double Ant::calcProbability(const std::vector<int>& avalibleWays, int from, int to) {
+double Ant::calcProbability(const std::vector<int> &avalibleWays, int from,
+                            int to) {
   double ita = pow(1 / getDistance(from, to), kBeta);
   double teta = pow(pheromones(from, to), kAlpha);
   double probability = 100 * ita * teta;
@@ -87,9 +127,6 @@ void Ant::updateTabuLastTime() {
 }
 
 void Ant::runAnt() {
-  sizeOfMap = graphData.getCols();
-  position = startPosition;
-  result.distance = 0;
   initTabu();
   for (int i = 0; i < graphData.getCols(); i++) {
     int prevPos, curPos;
@@ -119,7 +156,39 @@ void Ant::checkRun() {
   if (count > 1) result.distance = INFINITY;
 }
 
-void ACO::createPheromones(const Graph& graph) {
+void ACO::delateDataAco() {
+  this->runsCount = 0;
+  this->resultACO.distance = 0;
+  this->resultACO.vertices.clear();
+  this->ants.clear();
+}
+
+ACO::ACO(const ACO &other) { *this = other; }
+
+ACO &ACO::operator=(const ACO &other) {
+  if (this != &other) {
+    this->runsCount = other.runsCount;
+    this->resultACO = other.resultACO;
+    this->pheromones = other.pheromones;
+    this->ants = other.ants;
+  }
+  return *this;
+}
+
+ACO::ACO(ACO &&other) {
+  *this = other;
+  other.delateDataAco();
+}
+
+ACO &ACO::operator=(ACO &&other) {
+  if (this != &other) {
+    *this = other;
+    other.delateDataAco();
+  }
+  return *this;
+}
+
+void ACO::createPheromones(const Graph &graph) {
   pheromones = graph.getData();
   for (int i = 0; i < graph.getSize(); i++) {
     for (int j = 0; j < graph.getSize(); j++) {
@@ -132,7 +201,7 @@ void ACO::createPheromones(const Graph& graph) {
   }
 }
 
-void ACO::createAnts(const Matrix& graphData) {
+void ACO::createAnts(const Matrix &graphData) {
   for (int i = 0; i < graphData.getCols(); i++) {
     int startPosition = randomChoose(graphData.getCols() - 1);
     ants.push_back(Ant(graphData, pheromones, startPosition));
@@ -145,15 +214,18 @@ void ACO::upadateTsmResult() {
       resultACO.distance = ants[i].getTrip().distance;
       resultACO.vertices.clear();
       resultACO.vertices = ants[i].getTrip().vertices;
-      runsCount = 0;  // обнуляем счетчик проходок для большего кол-ва проходок и нахождения лучшей длины
+      runsCount = 0;  // обнуляем счетчик проходок для большего кол-ва проходок
+                      // и нахождения лучшей длины
     }
   }
 }
 
-Matrix ACO::updatePheromonesOneRun(const TsmResult& oneResult, Matrix curPheromones) {
+Matrix ACO::updatePheromonesOneRun(const TsmResult &oneResult,
+                                   Matrix curPheromones) {
   double deltaTeta = kQ / oneResult.distance;
   for (size_t i = 0; i < oneResult.vertices.size() - 1; ++i) {
-    curPheromones(oneResult.vertices[i], oneResult.vertices[i + 1]) += deltaTeta;
+    curPheromones(oneResult.vertices[i], oneResult.vertices[i + 1]) +=
+        deltaTeta;
   }
   return curPheromones;
 }
@@ -170,19 +242,20 @@ void ACO::deleteAnts() { ants.clear(); }
 
 void ACO::decreacePheromones() { pheromones *= (1 - kPheromoneEvaporation); }
 
-void ACO::createThreads(const Matrix& graphData) {
+void ACO::createThreads(const Matrix &graphData) {
   std::vector<std::thread> threadVector;
   for (int i = 0; i < graphData.getCols(); i++) {
-    threadVector.emplace_back(std::thread(&s21::ACO::createAndGo, this, graphData));
+    threadVector.emplace_back(
+        std::thread(&s21::ACO::createAndGo, this, graphData));
   }
-  for (auto& t : threadVector) {
+  for (auto &t : threadVector) {
     t.join();
   }
   upadateTsmResult();
   pheromones = updatePheromonesOneRun(resultACO, pheromones);
 }
 
-void ACO::createAndGo(const Matrix& graphData) {
+void ACO::createAndGo(const Matrix &graphData) {
   int startPosition = randomChoose(graphData.getCols() - 1);
   Ant oneAnt(graphData, pheromones, startPosition);
   oneAnt.runAnt();
@@ -191,7 +264,7 @@ void ACO::createAndGo(const Matrix& graphData) {
   mtx.unlock();
 }
 
-TsmResult ACO::TSPSolve(const Graph& graph) {
+TsmResult ACO::TSPSolve(const Graph &graph) {
   createPheromones(graph);
   while (runsCount < kRunCountMAX) {
     createAnts(graph.getData());
@@ -204,9 +277,8 @@ TsmResult ACO::TSPSolve(const Graph& graph) {
   return resultACO;
 }
 
-TsmResult ACO::TSPSolveMultithreads(const Graph& graph) {
+TsmResult ACO::TSPSolveMultithreads(const Graph &graph) {
   createPheromones(graph);
-  std::vector<std::thread> threadVector;
   while (runsCount < kRunCountMAX) {
     createThreads(graph.getData());
     decreacePheromones();

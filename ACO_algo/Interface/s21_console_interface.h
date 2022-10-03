@@ -1,9 +1,11 @@
 #pragma once
 
+#include <stdio.h>
+
 #include <iostream>
 
-#include "../ants/s21_graph.h"
-#include "../ants/s21_graph_algorithms.h"
+#include "../Model/s21_graph.h"
+#include "../Model/s21_graph_algorithms.h"
 
 namespace s21 {
 

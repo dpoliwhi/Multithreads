@@ -1,7 +1,5 @@
 #include "s21_graph_algorithms.h"
 
-#include "../SimpleTimer.h"
-
 namespace s21 {
 
 std::vector<int> GraphAlgorithms::correctOutput(std::vector<int> vec) {
@@ -13,13 +11,16 @@ std::vector<int> GraphAlgorithms::correctOutput(std::vector<int> vec) {
 }
 
 void GraphAlgorithms::checkGraph(const Graph &graph) {
-  if (graph.getDirectionType() == directed || graph.getWeightType() == unweighted || graph.getSize() <= 2) {
+  if (graph.getDirectionType() == directed ||
+      graph.getWeightType() == unweighted || graph.getSize() <= 2) {
     throw std::invalid_argument("Wrong graph");
   }
 }
 
-std::pair<TsmResult, double> GraphAlgorithms::solveTravelingSalesmanProblem(const Graph &graph, int N) {
+std::pair<TsmResult, double> GraphAlgorithms::solveTravelingSalesmanProblem(
+    const Graph &graph, int N) {
   Simpletimer timer;
+  timer.startTime();
   checkGraph(graph);
   ACO algo;
   std::pair<TsmResult, double> result;
@@ -31,9 +32,11 @@ std::pair<TsmResult, double> GraphAlgorithms::solveTravelingSalesmanProblem(cons
   return result;
 }
 
-std::pair<TsmResult, double> GraphAlgorithms::solveTravelingSalesmanProblemMultithreads(const Graph &graph,
-                                                                                        int N) {
+std::pair<TsmResult, double>
+GraphAlgorithms::solveTravelingSalesmanProblemMultithreads(const Graph &graph,
+                                                           int N) {
   Simpletimer timer;
+  timer.startTime();
   checkGraph(graph);
   ACO algo;
   std::pair<TsmResult, double> result;

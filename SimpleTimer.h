@@ -8,13 +8,12 @@ class Simpletimer {
   std::chrono::duration<double> runtime;
 
  public:
+  void startTime() { start = std::chrono::high_resolution_clock::now(); }
   double getTime() {
     end = std::chrono::high_resolution_clock::now();
     runtime = end - start;
     return runtime.count();
   }
-  Simpletimer() {
-    start = std::chrono::high_resolution_clock::now();
-  }
+  Simpletimer() {}
   ~Simpletimer() {}
 };

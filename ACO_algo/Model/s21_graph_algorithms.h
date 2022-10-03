@@ -7,9 +7,9 @@
 #include <iostream>
 #include <vector>
 
+#include "../../SimpleTimer.h"
 #include "aco.h"
 #include "s21_graph.h"
-// #include "../Model/simple_timer.h"
 
 namespace s21 {
 
@@ -19,8 +19,10 @@ class GraphAlgorithms {
   void checkGraph(const Graph &graph);
 
  public:
-  std::pair<TsmResult, double> solveTravelingSalesmanProblem(const Graph &graph, int N);
-  std::pair<TsmResult, double> solveTravelingSalesmanProblemMultithreads(const Graph &graph, int N);
+  std::pair<TsmResult, double> solveTravelingSalesmanProblem(const Graph &graph,
+                                                             int N);
+  std::pair<TsmResult, double> solveTravelingSalesmanProblemMultithreads(
+      const Graph &graph, int N);
 };
 
 }  // namespace s21

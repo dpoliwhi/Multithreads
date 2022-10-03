@@ -13,15 +13,16 @@
 namespace s21 {
 
 struct TsmResult {
-  std::vector<int> vertices;  // массив с искомым маршрутом (с порядком обхода вершин).
+  std::vector<int>
+      vertices;  // массив с искомым маршрутом (с порядком обхода вершин).
   double distance;  // длина этого маршрута
 };
 
 const double kAlpha = 1.0;  // выбор пути относительно остатка феромонов
-const double kBeta = 1.0;   // выбор пути относительно дальности пути
-const double kPheromone0 = 0.5;            // начальное значение феромонов
+const double kBeta = 1.0;  // выбор пути относительно дальности пути
+const double kPheromone0 = 0.5;  // начальное значение феромонов
 const double kPheromoneEvaporation = 0.5;  // коэффициент испарения феромонов
-const double kQ = 1.0;                     // коэффициент увеличения феромонов
+const double kQ = 1.0;  // коэффициент увеличения феромонов
 const int kRunCountMAX = 20;  // количество проходок групп муравьев по карте
 
 double randomChoose(int max);
@@ -39,33 +40,44 @@ class Ant {
   std::map<int, double> probability;
   TsmResult result;
 
+  void delateDataAnt();
   void initTabu();
   void updateTabu();
   void updateTabuLastTime();
   void chooseWay();
   void nestProbability(const std::vector<int>& avalibleWays);
-  double calcProbability(const std::vector<int>& avalibleWays, int from, int to);
+  double calcProbability(const std::vector<int>& avalibleWays, int from,
+                         int to);
   double getDistance(int from, int to);
   void checkRun();
 
  public:
-  Ant(Matrix data, Matrix phm, int startPos) : graphData(data), pheromones(phm), startPosition(startPos){};
+  Ant(Matrix data, Matrix phm, int startPos);
+  ~Ant() {};
+  Ant(const Ant& other);
+  Ant& operator=(const Ant& other);
+  Ant(Ant&& other);
+  Ant& operator=(Ant&& other);
+
   void runAnt();
   TsmResult getTrip();
 };
 
 class ACO {
  private:
-  int runsCount = 0;  // счетчик для кол-ва проходок. Обнуляется при каждом нахождении меньшего пути
+  int runsCount = 0;  // счетчик для кол-ва проходок. Обнуляется при каждом
+                      // нахождении меньшего пути
   TsmResult resultACO;
   Matrix pheromones;
   std::vector<Ant> ants;
 
+  void delateDataAco();
   void createAnts(const Matrix& graphData);
   void deleteAnts();
   void groupRun();
   void createPheromones(const Graph& graph);
-  Matrix updatePheromonesOneRun(const TsmResult& oneResult, Matrix curPheromones);
+  Matrix updatePheromonesOneRun(const TsmResult& oneResult,
+                                Matrix curPheromones);
   void decreacePheromones();
   void upadateTsmResult();
   void createThreads(const Matrix& graphData);
@@ -77,6 +89,11 @@ class ACO {
     resultACO.vertices = {};
   }
   ~ACO() {}
+  ACO(const ACO& other);
+  ACO& operator=(const ACO& other);
+  ACO(ACO&& other);
+  ACO& operator=(ACO&& other);
+
   TsmResult TSPSolve(const Graph& graph);
   TsmResult TSPSolveMultithreads(const Graph& graph);
 };
